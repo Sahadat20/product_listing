@@ -14,6 +14,8 @@ const CreateProduct = (props) => {
             tags: []
         }
     ])
+    const [productName, setProductName] = useState('');
+    const [productSKU, setProductSKU] = useState('');
     console.log(typeof props.variants)
     // handle click event of the Add button
     const handleAddClick = () => {
@@ -73,11 +75,24 @@ const CreateProduct = (props) => {
         }, []);
         return ans;
     }
-
+    const handleProductNameChange = (event) => {
+        setProductName(event.target.value);
+    }
+    const handleProductSKUChange = (event) => {
+        setProductSKU(event.target.value);
+    }
+   
     // Save product
     let saveProduct = (event) => {
         event.preventDefault();
         // TODO : write your code here to save the product
+        console.log('Saving')
+        console.log('product name')
+        console.log(productName)
+        console.log('product sku')
+        console.log(productSKU)
+        console.log('product varients')
+        console.log(productVariants)
     }
 
 
@@ -90,11 +105,11 @@ const CreateProduct = (props) => {
                             <div className="card-body">
                                 <div className="form-group">
                                     <label htmlFor="">Product Name</label>
-                                    <input type="text" placeholder="Product Name" className="form-control"/>
+                                    <input type="text" placeholder="Product Name" className="form-control" onChange={handleProductNameChange}/>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="">Product SKU</label>
-                                    <input type="text" placeholder="Product Name" className="form-control"/>
+                                    <input type="text" placeholder="Product Name" className="form-control" onChange={handleProductSKUChange}/>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="">Description</label>
