@@ -99,10 +99,10 @@
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
                                         <dd class="col-sm-4 pb-0">
-                                            <input type="number" name="product_price_{{choice_count}}" placeholder="Product Title" class="form-control" value="{{choice.price}}">
+                                           Price: <input type="number" name="product_price_{{choice_count}}" placeholder="Product Title" class="form-control" value="{{choice.price}}">
                                         </dd>
                                         <dd class="col-sm-4 pb-0">
-                                            <input type="number" name="product_stock_{{choice_count}}" placeholder="Product Title" class="form-control" value="{{choice.stock}}">
+                                           InStock: <input type="number" name="product_stock_{{choice_count}}" placeholder="Product Title" class="form-control" value="{{choice.stock}}">
                                         </dd>
                                             <input type="hidden" name="choice_id_{{choice_count}}" placeholder="Product Title" class="form-control" value="{{choice.id}}">
 
@@ -152,8 +152,8 @@
                                 </dt>
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">{{choice.price}}</dd>
-                                        <dd class="col-sm-8 pb-0">{{choice.stock}}.</dd>
+                                        <dd class="col-sm-4 pb-0">Price: {{choice.price}}</dd>
+                                        <dd class="col-sm-8 pb-0"> InStock: {{choice.stock}}.</dd>
                                     </dl>
                                 </dd>
                                 {% endfor %}
