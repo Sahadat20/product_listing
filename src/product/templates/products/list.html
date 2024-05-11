@@ -68,7 +68,71 @@
 
                     {% for product in  products %}
                      {% with sl=forloop.counter0|add:1 %}
+                {% if product.id|default:0|add:0 == edit_product_id|default:0|add:0 %}
+                    
+                    <form action="" method="get" >
+                    <tr>
+                        <td> {{ sl }}</td>
+                        <td>
+                        <input type="hidden" name="product_id" placeholder="Product Title" class="form-control" value="{{ product.id }}">
+                        <input type="text" name="product_title" placeholder="Product Title" class="form-control" value="{{ product.title }}">
+                        {% comment %} {{product.title}}  {% endcomment %}
+                        
+                        <br> Created at : {{product.created_at}}</td>
+                        <td>
+                        <input type="text" name="product_description" placeholder="Product Title" class="form-control" value="{{ product.description }}">
+                        </td>
+                        <td>
+                        {% comment %} {% for choice in product.productvariant_set.all %}
+                                     <p>{{choice.variant.title}} </p>
+                                     {% endfor %} {% endcomment %}
+                            
+                            <dl class="row mb-0"  id="variant{{ sl }}">
+                                {% for choice in product.productvariantprice_set.all %}
+                                {% with choice_count=forloop.counter0|add:1 %}
+                                <dt class="col-sm-3 pb-0">
+                                    {% comment %} XL/ Black/ Full {% endcomment %}
+                                    
+                                     {{choice.product_variant_one.variant_title}}/ {{choice.product_variant_two.variant_title}}/ {{choice.product_variant_three.variant_title}}
+                                     
+                                </dt>
+                                <dd class="col-sm-9">
+                                    <dl class="row mb-0">
+                                        <dd class="col-sm-4 pb-0">
+                                            <input type="number" name="product_price_{{choice_count}}" placeholder="Product Title" class="form-control" value="{{choice.price}}">
+                                        </dd>
+                                        <dd class="col-sm-4 pb-0">
+                                            <input type="number" name="product_stock_{{choice_count}}" placeholder="Product Title" class="form-control" value="{{choice.stock}}">
+                                        </dd>
+                                            <input type="hidden" name="choice_id_{{choice_count}}" placeholder="Product Title" class="form-control" value="{{choice.id}}">
 
+                                    </dl>
+                                </dd>
+                                {% endwith %}
+
+                                {% endfor %}
+                                            <input type="hidden" name="choice_count" placeholder="Product Title" class="form-control" value="{{product.productvariantprice_set.all|length}}">
+
+                                
+                            </dl>
+                            
+                            {% comment %} <button onclick="$('#variant{{ sl }}').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
+                            </button> {% endcomment %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <input type="hidden" name="update" placeholder="Product Title" class="form-control" value="1">
+
+                                <button type="submit" class="btn btn-success">Update</button>
+                                    {% comment %} <a href="http://127.0.0.1:8000/product/list/?edit=True&edit_product_id=1" class="btn btn-success">Update</a> {% endcomment %}
+                                
+                                
+                            </div>
+                        </td>
+                    </tr>
+                </form>
+
+                {% else %}
                     <tr>
                         <td> {{ sl }}</td>
                         <td>{{product.title}} <br> Created at : {{product.created_at}}</td>
@@ -93,33 +157,7 @@
                                     </dl>
                                 </dd>
                                 {% endfor %}
-                                {% comment %} <dt class="col-sm-3 pb-0">
-                                    XL/ Black/ Half
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd>
-                                <dt class="col-sm-3 pb-0">
-                                    L/ Black/ Full
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd>
-                                <dt class="col-sm-3 pb-0">
-                                    L/ Black/ Half
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd> {% endcomment %}
+                                
                             </dl>
                             
                             <button onclick="$('#variant{{ sl }}').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
@@ -127,10 +165,13 @@
                         </td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a href="" class="btn btn-success">Edit</a>
+                               
+                                    <a href="http://127.0.0.1:8000/product/list/?edit=True&edit_product_id={{product.id}}" class="btn btn-success">Edit</a>
                             </div>
                         </td>
                     </tr>
+                {% endif %}
+
                     {% endwith %}
                     {% endfor %}
                     </tbody>
@@ -143,7 +184,8 @@
         <div class="card-footer">
             <div class="row justify-content-between">
                 <div class="col-md-6">
-                    <p>Showing 1 to 10 out of 100</p>
+                
+                    <p>Showing 1 to {{products|length}} out of {{products|length}}</p>
                 </div>
                 <div class="col-md-2">
 

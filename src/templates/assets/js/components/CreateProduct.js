@@ -14,8 +14,15 @@ const CreateProduct = (props) => {
             tags: []
         }
     ])
+    const [image, setImage] = useState(null);
     const [productName, setProductName] = useState('');
     const [productSKU, setProductSKU] = useState('');
+    const [productDescription, setProductDescription] = useState('');
+    const [files, setFiles] = useState([]);
+    const handleDrop = (acceptedFiles) => {
+        // Set the dropped files to state
+        setFiles(acceptedFiles[0]);
+    };
     console.log(typeof props.variants)
     // handle click event of the Add button
     const handleAddClick = () => {
@@ -84,7 +91,45 @@ const CreateProduct = (props) => {
     const handleProductSKUChange = (event) => {
         setProductSKU(event.target.value);
     }
-   
+    const handleProductDesChange = (event) => {
+        setProductDescription(event.target.value);
+    }
+    const handlePriceChange = (title, newPrice) => {
+        setProductVariantPrices(productVariantPrices => {
+            return productVariantPrices.map(variant => {
+                if (variant.title === title) {
+                    return {
+                        ...variant,
+                        price: newPrice
+                    };
+                } else {
+                    return variant;
+                }
+            });
+        });
+    };
+    const handleStockChange = (title, newStcok) => {
+        setProductVariantPrices(productVariantPrices => {
+            return productVariantPrices.map(variant => {
+                if (variant.title === title) {
+                    return {
+                        ...variant,
+                        stock: newStcok
+                    };
+                } else {
+                    return variant;
+                }
+            });
+        });
+    };
+    const handlePriceInputChange = (event, title) => {
+        const { value } = event.target;
+        handlePriceChange(title, parseFloat(value)); 
+    };
+    const handleStockInputChange = (event, title) => {
+        const { value } = event.target;
+        handleStockChange(title, parseFloat(value)); 
+    };
     // Save product
     let saveProduct = (event) => {
         event.preventDefault();
@@ -96,10 +141,17 @@ const CreateProduct = (props) => {
         console.log(productSKU)
         console.log('product varients')
         console.log(productVariants)
+        console.log('productVariantPrices')
+        console.log(productVariantPrices)
+        console.log('files')
+        console.log(files)
         const productData = {
             name: productName,
             sku: productSKU,
-            variants: productVariants
+            description: productDescription,
+            variants: productVariants,
+            variants_prices: productVariantPrices,
+            image: files,
         };
         const csrftoken = getCookie('csrftoken');
         // Send a POST request to the Django API
@@ -144,7 +196,7 @@ const CreateProduct = (props) => {
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="">Description</label>
-                                    <textarea id="" cols="30" rows="4" className="form-control"></textarea>
+                                    <textarea id="" cols="30" rows="4" className="form-control" onChange={handleProductDesChange}></textarea>
                                 </div>
                             </div>
                         </div>
@@ -155,7 +207,7 @@ const CreateProduct = (props) => {
                                 <h6 className="m-0 font-weight-bold text-primary">Media</h6>
                             </div>
                             <div className="card-body border">
-                                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                                <Dropzone onDrop={handleDrop}>
                                     {({getRootProps, getInputProps}) => (
                                         <section>
                                             <div {...getRootProps()}>
@@ -247,8 +299,8 @@ const CreateProduct = (props) => {
                                                 return (
                                                     <tr key={index}>
                                                         <td>{productVariantPrice.title}</td>
-                                                        <td><input className="form-control" type="text"/></td>
-                                                        <td><input className="form-control" type="text"/></td>
+                                                        <td><input className="form-control" type="text" onChange={(e) => handlePriceInputChange(e, productVariantPrice.title)}/></td>
+                                                        <td><input className="form-control" type="text" onChange={(e) => handleStockInputChange(e, productVariantPrice.title)}/></td>
                                                     </tr>
                                                 )
                                             })
