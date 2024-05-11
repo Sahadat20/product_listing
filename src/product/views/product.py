@@ -1,6 +1,7 @@
 from django.views import generic
 from django.db.models import Q, Count
 from product.models import Variant, Product, ProductVariant
+import json
 
 
 class CreateProductView(generic.TemplateView):
@@ -8,11 +9,21 @@ class CreateProductView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateProductView, self).get_context_data(**kwargs)
+        if self.request.method == 'POST':
+        # Parse the JSON data from the request body
+            data = self.request.POST.dict()
+            print(data)
         variants = Variant.objects.filter(active=True).values('id', 'title')
         context['product'] = True
         context['variants'] = list(variants.all())
         print(list(variants.all()))
         return context
+    def post(self, request, format=None):
+        # print(request.data)
+        data = self.request.POST
+        product_data = json.loads(request.body)
+        print("++++++++++++")
+        print(product_data)
 class ProductView(generic.TemplateView):
     template_name = 'products/list.html'
 

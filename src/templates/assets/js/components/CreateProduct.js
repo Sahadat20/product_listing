@@ -63,7 +63,10 @@ const CreateProduct = (props) => {
         })
 
     }
-
+    function getCookie(name) {
+        const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return cookieValue ? cookieValue.pop() : '';
+    }
     // combination algorithm
     function getCombn(arr, pre) {
         pre = pre || '';
@@ -93,6 +96,34 @@ const CreateProduct = (props) => {
         console.log(productSKU)
         console.log('product varients')
         console.log(productVariants)
+        const productData = {
+            name: productName,
+            sku: productSKU,
+            variants: productVariants
+        };
+        const csrftoken = getCookie('csrftoken');
+        // Send a POST request to the Django API
+        fetch('http://127.0.0.1:8000/product/create/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(productData)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Product saved successfully');
+                // Optionally, you can perform further actions here
+            } else {
+                console.error('Failed to save product');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+
     }
 
 
